@@ -9,7 +9,7 @@ import {
   Subscribe,
   SuperQuality,
 } from "./sections";
-import Nav from "./components/Nav";
+import Nav from "./component/Nav";
 const App = () => {
   return (
     <main className="relative">

@@ -23,7 +23,7 @@ const Nav = () => {
         </a>
 
         {/* Navigation Links for larger screens */}
-        <ul className="flex-1 flex justify-center items-center gap-16 max-lg:hidden">
+        <ul className="flex-1 flex justify-center items-center gap-[7%] max-lg:hidden">
           <li>
             <Link
               to="/"

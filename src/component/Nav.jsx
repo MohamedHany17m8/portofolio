@@ -1,10 +1,16 @@
-import { hamburger } from "../assets/icons";
 import { headerLogo } from "../assets/images";
-import { navLinks } from "../constants";
+import { Link } from "react-router-dom";
+import React, { useState } from "react";
 
 const Nav = () => {
+  const [isNavOpen, setIsNavOpen] = useState(false);
+
+  const toggleNav = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
   return (
-    <header className="padding-x py-8 absolute z-10 w-full">
+    <header className="padding-x py-8 fixed top-0 left-0 w-full bg-white z-50 shadow-md">
       <nav className="flex justify-between items-center max-container">
         <a href="/">
           <img
@@ -12,28 +18,147 @@ const Nav = () => {
             alt="logo"
             width={129}
             height={29}
-            className="m-0 w-[129px] h-[29px]"
+            className="m-0 w-[129px] h-[29px] transition-transform duration-300 hover:scale-105"
           />
         </a>
+
+        {/* Navigation Links for larger screens */}
         <ul className="flex-1 flex justify-center items-center gap-16 max-lg:hidden">
-          {navLinks.map((item) => (
-            <li key={item.label}>
-              <a
-                href={item.href}
-                className="font-montserrat leading-normal text-lg text-slate-gray"
-              >
-                {item.label}
-              </a>
-            </li>
-          ))}
+          <li>
+            <Link
+              to="/"
+              className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+            >
+              Home
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/about"
+              className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+            >
+              About Us
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/contact"
+              className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+            >
+              Contact Us
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/products"
+              className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+            >
+              Products
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/signin"
+              className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+            >
+              Sign In
+            </Link>
+          </li>
         </ul>
+
+        {/* Sign In and Explore Now links for larger screens */}
         <div className="flex gap-2 text-lg leading-normal font-medium font-montserrat max-lg:hidden wide:mr-24">
-          <a href="/">Sign in</a>
+          <a
+            href="/"
+            className="hover:text-coral-red transition-colors duration-300"
+          >
+            Sign in
+          </a>
           <span>/</span>
-          <a href="/">Explore now</a>
+          <a
+            href="/"
+            className="hover:text-coral-red transition-colors duration-300"
+          >
+            Explore now
+          </a>
         </div>
-        <div className="hidden max-lg:block">
-          <img src={hamburger} alt="hamburger icon" width={25} height={25} />
+
+        {/* Hamburger Icon for small screens */}
+        <div
+          className="hidden max-lg:block cursor-pointer space-y-1.5"
+          onClick={toggleNav}
+        >
+          {/* Hamburger Bars */}
+          <span
+            className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${
+              isNavOpen ? "rotate-45 translate-y-2" : ""
+            }`}
+          ></span>
+          <span
+            className={`block w-6 h-0.5 bg-black transition-opacity duration-300 ${
+              isNavOpen ? "opacity-0" : ""
+            }`}
+          ></span>
+          <span
+            className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${
+              isNavOpen ? "-rotate-45 -translate-y-2" : ""
+            }`}
+          ></span>
+        </div>
+
+        {/* Navigation Links for small screens */}
+        <div
+          className={`lg:hidden absolute top-20 left-0 w-full bg-white shadow-md overflow-hidden transition-all duration-500 ease-in-out ${
+            isNavOpen ? "max-h-96" : "max-h-0 "
+          }`}
+        >
+          <ul className="flex flex-col items-center gap-4 py-4">
+            <li>
+              <Link
+                to="/"
+                className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+                onClick={toggleNav}
+              >
+                Home
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/about"
+                className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+                onClick={toggleNav}
+              >
+                About Us
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/contact"
+                className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+                onClick={toggleNav}
+              >
+                Contact Us
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/products"
+                className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+                onClick={toggleNav}
+              >
+                Products
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/signin"
+                className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+                onClick={toggleNav}
+              >
+                Sign In
+              </Link>
+            </li>
+          </ul>
         </div>
       </nav>
     </header>

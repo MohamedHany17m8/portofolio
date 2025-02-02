@@ -3,30 +3,39 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { navLinks } from "../constants";
 import { useRef, useEffect } from "react";
+import { FaChevronDown } from "react-icons/fa"; // Import arrow icon
+
 const Nav = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
+  const [isHomeOpen, setIsHomeOpen] = useState(false);
+  const hamburgerRef = useRef(null);
   const navRef = useRef(null);
   const toggleNav = () => {
-    setIsNavOpen(!isNavOpen);
+    setIsNavOpen((prev) => !prev);
   };
+
+  const toggleHome = () => setIsHomeOpen(!isHomeOpen);
   // Handle click outside to close menu
   useEffect(() => {
     function handleClickOutside(event) {
-      if (navRef.current && !navRef.current.contains(event.target)) {
+      if (
+        navRef.current &&
+        !navRef.current.contains(event.target) &&
+        !hamburgerRef.current.contains(event.target) // Add this condition
+      ) {
         setIsNavOpen(false);
       }
     }
 
     if (isNavOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isNavOpen]);
+
   return (
     <header className="padding-x py-8 fixed top-0 left-0 w-full bg-white z-50 shadow-md">
       <nav className="flex justify-between items-center max-container">
@@ -103,6 +112,7 @@ const Nav = () => {
 
         {/* Hamburger Icon for small screens */}
         <div
+          ref={hamburgerRef} // Add this ref
           className="hidden max-lg:block cursor-pointer space-y-1.5"
           onClick={toggleNav}
         >

@@ -1,14 +1,32 @@
 import { headerLogo } from "../assets/images";
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
-
+import { navLinks } from "../constants";
+import { useRef, useEffect } from "react";
 const Nav = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
-
+  const navRef = useRef(null);
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
   };
+  // Handle click outside to close menu
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setIsNavOpen(false);
+      }
+    }
 
+    if (isNavOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isNavOpen]);
   return (
     <header className="padding-x py-8 fixed top-0 left-0 w-full bg-white z-50 shadow-md">
       <nav className="flex justify-between items-center max-container">
@@ -108,8 +126,9 @@ const Nav = () => {
 
         {/* Navigation Links for small screens */}
         <div
+          ref={navRef}
           className={`lg:hidden absolute top-20 left-0 w-full bg-white shadow-md overflow-hidden transition-all duration-500 ease-in-out ${
-            isNavOpen ? "max-h-96" : "max-h-0 "
+            isNavOpen ? "max-h-96" : "max-h-0"
           }`}
         >
           <ul className="flex flex-col items-center gap-4 py-4">

@@ -10,6 +10,7 @@ const Nav = () => {
   const [isHomeOpen, setIsHomeOpen] = useState(false);
   const hamburgerRef = useRef(null);
   const navRef = useRef(null);
+  const homeSubmenuRef = useRef(null); // Ref for the Home submenu
   const toggleNav = () => {
     setIsNavOpen((prev) => !prev);
   };
@@ -18,23 +19,33 @@ const Nav = () => {
   // Handle click outside to close menu
   useEffect(() => {
     function handleClickOutside(event) {
+      // Close the main nav if clicked outside
       if (
         navRef.current &&
         !navRef.current.contains(event.target) &&
-        !hamburgerRef.current.contains(event.target) // Add this condition
+        !hamburgerRef.current.contains(event.target)
       ) {
         setIsNavOpen(false);
       }
+
+      // Close the Home submenu if clicked outside
+      if (
+        homeSubmenuRef.current &&
+        !homeSubmenuRef.current.contains(event.target) &&
+        !event.target.closest(".home-link") // Ensure the click is not on the Home link or its arrow
+      ) {
+        setIsHomeOpen(false);
+      }
     }
 
-    if (isNavOpen) {
+    if (isNavOpen || isHomeOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isNavOpen]);
+  }, [isNavOpen, isHomeOpen]); // Add isHomeOpen as a dependency
 
   return (
     <header className="padding-x py-8 fixed top-0 left-0 w-full bg-white z-50 shadow-md">
@@ -51,13 +62,43 @@ const Nav = () => {
 
         {/* Navigation Links for larger screens */}
         <ul className="flex-1 flex justify-center items-center gap-[7%] max-lg:hidden">
-          <li>
+          <li className="relative flex items-center">
             <Link
               to="/"
               className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
             >
               Home
             </Link>
+            {/* Arrow icon (toggles submenu) */}
+            <FaChevronDown
+              className={`cursor-pointer transition-transform duration-300 ml-2 text-slate-gray hover:text-coral-red ${
+                isHomeOpen ? "rotate-180" : ""
+              }`}
+              onClick={(e) => {
+                e.stopPropagation(); // Prevents the Link from triggering
+                setIsHomeOpen(!isHomeOpen);
+              }}
+            />
+            {/* Submenu */}
+            <ul
+              ref={homeSubmenuRef}
+              className={`absolute top-full left-0 bg-white shadow-md w-40 py-2 rounded-lg transition-all duration-300 ${
+                isHomeOpen ? "opacity-100 visible" : "opacity-0 invisible"
+              }`}
+              style={{ zIndex: 1000 }} // Ensure the submenu appears above other elements
+            >
+              {navLinks.map((link, index) => (
+                <li key={index}>
+                  <a
+                    href={`${link.href}`} // Use # to target the section by id
+                    className="block px-4 py-2 font-montserrat text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+                    onClick={() => setIsHomeOpen(false)} // Close the submenu on click
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
           </li>
           <li>
             <Link
@@ -142,7 +183,9 @@ const Nav = () => {
           }`}
         >
           <ul className="flex flex-col items-center gap-4 py-4">
-            <li>
+            <li className="relative flex items-center">
+              {" "}
+              {/* Add relative positioning here */}
               <Link
                 to="/"
                 className="font-montserrat leading-normal text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
@@ -150,6 +193,36 @@ const Nav = () => {
               >
                 Home
               </Link>
+              {/* Arrow icon (toggles submenu) */}
+              <FaChevronDown
+                className={`cursor-pointer transition-transform duration-300 ml-2 text-slate-gray hover:text-coral-red ${
+                  isHomeOpen ? "rotate-180" : ""
+                }`}
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevents the Link from triggering
+                  setIsHomeOpen(!isHomeOpen);
+                }}
+              />
+              {/* Submenu */}
+              <ul
+                ref={homeSubmenuRef} // Add ref to the submenu
+                className={`absolute top-full left-0 bg-white shadow-md w-40 py-2 rounded-lg transition-all duration-300 ${
+                  isHomeOpen ? "opacity-100 visible" : "opacity-0 invisible"
+                }`}
+                style={{ zIndex: 1000 }} // Ensure the submenu appears above other elements
+              >
+                {navLinks.map((link, index) => (
+                  <li key={index}>
+                    <a
+                      href={`${link.href}`} // Use # to target the section by id
+                      className="block px-4 py-2 font-montserrat text-lg text-slate-gray hover:text-coral-red transition-colors duration-300"
+                      onClick={() => setIsHomeOpen(false)} // Close the submenu on click
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             </li>
             <li>
               <Link

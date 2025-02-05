@@ -34,7 +34,7 @@ const Products = () => {
   };
 
   return (
-    <section className="mt-28 px-16 flex flex-col items-center">
+    <section className="mt-28 mb-10 px-16 flex flex-col items-center">
       <h1 className="text-2xl md:text-3xl font-bold mb-6 text-gray-800">
         Featured Products
       </h1>

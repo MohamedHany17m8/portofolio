@@ -1,5 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
+  darkMode: "class", // Move darkMode here
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     fontSize: {

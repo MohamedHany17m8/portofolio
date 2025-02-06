@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import React, { useState, useRef, useEffect } from "react";
 import { navLinks } from "../constants";
 import { FaChevronDown } from "react-icons/fa"; // Import arrow icon
+import DarkModeToggle from "../DarkModeToggle";
 
 const Nav = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
@@ -62,8 +63,8 @@ const Nav = () => {
   }, [isNavOpen, isHomeOpen]);
 
   return (
-    <header className="padding-x py-8 fixed top-0 left-0 w-full bg-white z-50 shadow-md">
-      <nav className="flex justify-between items-center max-container">
+    <header className="sm:px-4 px-4 py-8 fixed top-0 left-0 w-full bg-white z-50 shadow-md">
+      <nav className="flex justify-between items-center max-container gap-3">
         <a href="/">
           <img
             src={headerLogo}
@@ -75,7 +76,7 @@ const Nav = () => {
         </a>
 
         {/* Navigation Links for larger screens */}
-        <ul className="flex-1 flex justify-center items-center gap-[7%] max-lg:hidden">
+        <ul className="flex-1 flex justify-center items-center gap-[5%] max-lg:hidden">
           <li className="relative flex items-center">
             <Link
               to="/"
@@ -153,7 +154,7 @@ const Nav = () => {
             </Link>
           </li>
         </ul>
-
+        <DarkModeToggle />
         {/* Sign In and Explore Now links for larger screens */}
         <div className="flex gap-2 text-lg leading-normal font-medium font-montserrat max-lg:hidden wide:mr-24">
           <a
@@ -170,7 +171,6 @@ const Nav = () => {
             Explore now
           </a>
         </div>
-
         {/* Hamburger Icon for small screens */}
         <div
           ref={hamburgerRef}

@@ -1,14 +1,4 @@
 import "./index.css";
-import {
-  CustomerReviews,
-  Footer,
-  Hero,
-  PopularProducts,
-  Services,
-  SpecialOffer,
-  Subscribe,
-  SuperQuality,
-} from "./sections";
 import Home from "./components/Home";
 import AboutUs from "./components/AboutUs";
 import ContactUs from "./components/ContactUs";

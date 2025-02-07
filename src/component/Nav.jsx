@@ -63,7 +63,7 @@ const Nav = () => {
   }, [isNavOpen, isHomeOpen]);
 
   return (
-    <header className="sm:px-4 px-4 py-8 fixed top-0 left-0 w-full bg-white z-50 shadow-md">
+    <header className="dark:bg-gray-800 sm:px-4 px-4 py-8 fixed top-0 left-0 w-full bg-white z-50 shadow-md">
       <nav className="flex justify-between items-center max-container gap-3">
         <a href="/">
           <img
@@ -179,17 +179,17 @@ const Nav = () => {
         >
           {/* Hamburger Bars */}
           <span
-            className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${
+            className={`block w-6 h-0.5 bg-black dark:bg-white transition-transform duration-300 ${
               isNavOpen ? "rotate-45 translate-y-2" : ""
             }`}
           ></span>
           <span
-            className={`block w-6 h-0.5 bg-black transition-opacity duration-300 ${
+            className={`block w-6 h-0.5 bg-black transition-opacity dark:bg-white duration-300 ${
               isNavOpen ? "opacity-0" : ""
             }`}
           ></span>
           <span
-            className={`block w-6 h-0.5 bg-black transition-transform duration-300 ${
+            className={`block w-6 h-0.5 bg-black transition-transform dark:bg-white duration-300 ${
               isNavOpen ? "-rotate-45 -translate-y-2" : ""
             }`}
           ></span>

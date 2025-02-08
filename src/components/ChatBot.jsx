@@ -1,35 +1,15 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import ReactMarkdown from "react-markdown";
 
-const ChatBot = () => {
+const ChatBot = ({ chatHistory, setChatHistory }) => {
   const [value, setValue] = useState("");
   const [error, setError] = useState("");
-  const [chatHistory, setChatHistory] = useState([]);
+  const messagesEndRef = useRef(null);
 
-  const surpriseOptions = [
-    "Who won the Latest Novel Peace Prize?",
-    "Where does pizza come from?",
-    "How do you make a BLT sandwich?",
-    "What is the capital of France?",
-    "Who wrote 'To Kill a Mockingbird'?",
-    "What is the largest planet in our solar system?",
-    "How many continents are there?",
-    "What is the boiling point of water?",
-    "Who painted the Mona Lisa?",
-    "What is the speed of light?",
-  ];
-
-  const clear = () => {
-    setValue("");
-    setError("");
-    setChatHistory([]);
-  };
-
-  const surprise = () => {
-    const randomValue =
-      surpriseOptions[Math.floor(Math.random() * surpriseOptions.length)];
-    setValue(randomValue);
-  };
+  // Auto-scroll to the latest message
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatHistory]);
 
   const getResponse = async () => {
     if (!value) {
@@ -37,16 +17,15 @@ const ChatBot = () => {
       return;
     }
     try {
-      // Update the options in getResponse method
       const options = {
         method: "POST",
         body: JSON.stringify({
           history: chatHistory.map((chatItem) => ({
             role: chatItem.role,
-            parts: [{ text: chatItem.parts }], // Wrap parts in array with text objects
+            parts: [{ text: chatItem.parts }],
           })),
           message: {
-            parts: [{ text: value }], // Wrap message in text object
+            parts: [{ text: value }],
           },
         }),
         headers: {
@@ -62,18 +41,12 @@ const ChatBot = () => {
       const data = await response.text();
       console.log("Server response:", data);
 
-      // Update chat history correctly
       setChatHistory((oldChatHistory) => [
         ...oldChatHistory,
-        {
-          role: "user",
-          parts: value,
-        },
-        {
-          role: "model",
-          parts: data,
-        },
+        { role: "user", parts: value },
+        { role: "model", parts: data },
       ]);
+
       setValue("");
       setError("");
     } catch (error) {
@@ -83,48 +56,57 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="app mt-10 flex justify-center items-center">
-      <section className="search-section bg-white p-8 dark:bg-gray-800 dark:text-white rounded-lg border shadow-md">
-        <p className="text-lg font-medium text-gray-800 mb-4 dark:text-white">
-          What do you want to know?
-          <button
-            onClick={surprise}
-            disabled={!chatHistory}
-            className="surprise bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4"
+    <div className="w-full h-full flex flex-col">
+      {/* Header */}
+      <div className="p-3 bg-blue-500 text-white flex justify-between items-center">
+        <h1 className="text-sm font-bold">AI Chat</h1>
+      </div>
+
+      {/* Chat History (Scrollable) */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-2">
+        {chatHistory.map((chatItem, index) => (
+          <div
+            key={index}
+            className={`flex ${
+              chatItem.role === "user" ? "justify-start" : "justify-end"
+            }`}
           >
-            Surprise me
-          </button>
-        </p>
-        <div className="input-container relative">
+            <div
+              className={`max-w-[80%] px-4 py-2 rounded-lg ${
+                chatItem.role === "user"
+                  ? "bg-blue-500 text-white dark:bg-blue-700 rounded-bl-none"
+                  : "bg-gray-100 dark:bg-gray-700 dark:text-white rounded-br-none"
+              }`}
+            >
+              <ReactMarkdown className="text-sm">
+                {chatItem.parts}
+              </ReactMarkdown>
+            </div>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+
+      {/* Input */}
+      <div className="p-3 border-t dark:border-gray-700">
+        <div className="relative">
           <input
             value={value}
             onChange={(e) => setValue(e.target.value)}
             type="text"
-            placeholder="When is Christmas?"
-            className="w-full px-4 py-2 border text-black border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder-gray-500 text-lg"
+            placeholder="Type your message..."
+            className="w-full pr-12 pl-4 py-2 border text-black dark:text-white dark:bg-gray-700 border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+            onKeyPress={(e) => e.key === "Enter" && getResponse()}
           />
-          {!error && (
-            <button
-              onClick={getResponse}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-            >
-              Ask me
-            </button>
-          )}
-          {error && <button onClick={clear}>Clear</button>}
+          <button
+            onClick={getResponse}
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-500 hover:bg-blue-700 text-white w-8 h-8 rounded-full flex items-center justify-center"
+          >
+            →
+          </button>
         </div>
-        {error && <p>{error}</p>}
-
-        <div className="search-result">
-          {chatHistory.map((chatItem, _index) => (
-            <div key={_index}>
-              <p className="answer">
-                {chatItem.role} : {chatItem.parts}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
+        {error && <p className="text-red-500 text-sm mt-2 ml-2">{error}</p>}
+      </div>
     </div>
   );
 };
